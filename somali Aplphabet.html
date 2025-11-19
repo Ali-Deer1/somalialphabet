@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Af-Soomaali Letters Learning & Quiz</title>
+<style>
+  :root{
+    --bg: linear-gradient(135deg,#06b6d4,#7c3aed,#fb7185);
+    --card-bg: rgba(255,255,255,0.08);
+    --text:#eef2ff;
+    --muted:#cbd5e1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif;}
+  body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+  header{background:rgba(0,0,0,0.6);padding:15px;text-align:center;font-size:1.8rem;font-weight:bold;}
+  nav{display:flex;justify-content:center;gap:15px;background:rgba(0,0,0,0.5);padding:10px;}
+  nav button{padding:10px 20px;border:none;border-radius:20px;font-weight:bold;cursor:pointer;transition:0.3s;}
+  nav button:hover{background:#f1c40f;color:#000;}
+  main{flex:1;padding:20px;}
+  .section{display:none;}
+  .section.active{display:block;}
+  .grid{display:grid;gap:15px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));}
+  .card{background:var(--card-bg);padding:20px;border-radius:15px;text-align:center;cursor:pointer;transition:0.3s;}
+  .card:hover{transform:scale(1.05);background:rgba(255,255,255,0.2);}
+  .xaraf{font-size:36px;font-weight:800;}
+  .emoji{font-size:38px;margin-top:6px;}
+  .eray{margin-top:8px;color:var(--muted);font-weight:600;}
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);z-index:100;}
+  .modal.show{display:flex;animation:fadeIn 0.3s ease forwards;}
+  .modal-card{background:rgba(0,0,0,0.8);padding:30px;border-radius:20px;display:flex;gap:20px;align-items:center;justify-content:center;flex-direction:column;color:var(--text);max-width:400px;text-align:center;}
+  .modal-xaraf{font-size:64px;font-weight:900;}
+  .modal-emoji{font-size:120px;margin:15px 0;}
+  .modal-sentence{font-size:20px;}
+  .close-btn{margin-top:10px;padding:8px 12px;border:none;border-radius:12px;cursor:pointer;font-weight:bold;}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .quiz-box{background:rgba(255,255,255,0.1);padding:20px;border-radius:15px;max-width:500px;margin:auto;text-align:center;}
+  .quiz-options button{display:block;margin:10px auto;padding:10px;width:80%;border-radius:10px;border:none;cursor:pointer;font-weight:bold;background:#fff;color:#333;}
+  .contact-info{background:rgba(255,255,255,0.1);padding:20px;border-radius:15px;max-width:600px;margin:auto;line-height:1.6;text-align:center;}
+  footer{text-align:center;padding:10px;background:rgba(0,0,0,0.7);font-size:0.9rem;}
+</style>
+</head>
+<body>
+<header>Af-Soomaali Letters Learning</header>
+<nav>
+  <button onclick="showSection('learn','upper')">Waaweyn</button>
+  <button onclick="showSection('learn','lower')">Yaryar</button>
+  <button onclick="showSection('learn','vowelsUpper')">Shaqal Waaweyn</button>
+  <button onclick="showSection('learn','vowelsLower')">Shaqal Yaryar</button>
+  <button onclick="showSection('quiz')">Quiz</button>
+  <button onclick="showSection('contact')">Contact</button>
+</nav>
+<main>
+  <section id="learn" class="section active">
+    <div class="grid" id="gridDisplay"></div>
+  </section>
+  <section id="quiz" class="section">
+    <div class="quiz-box">
+      <p id="quizQuestion">Su’aasha halkan ka bilaab</p>
+      <div class="quiz-options" id="quizOptions"></div>
+      <button onclick="nextQuestion()">Next</button>
+      <p id="quizScore"></p>
+    </div>
+  </section>
+  <section id="contact" class="section">
+    <div class="contact-info">
+      <h2>Contact Us</h2>
+      <p>📍 2920 12th Street, Minneapolis, MN 55407</p>
+      <p>📞 612-245-6253</p>
+      <p>📧 <a href="mailto:mumtazoneacademy@gmail.com">mumtazoneacademy@gmail.com</a></p>
+    </div>
+  </section>
+</main>
+<div id="modal" class="modal">
+  <div class="modal-card">
+    <div class="modal-xaraf" id="mXaraf">A</div>
+    <div class="modal-emoji" id="mEmoji">🏠</div>
+    <div class="modal-sentence" id="mSentence">A waa Aqal.</div>
+    <button class="close-btn" id="closeModal">Xidh</button>
+  </div>
+</div>
+<footer>© ZamzamProjects 2025</footer>
+<script>
+const letters=[{l:'B',w:'Buug',e:'📚'},{l:'T',w:'Tufaax',e:'🍎'},{l:'J',w:'Jaranjaro',e:'🪜'},{l:'X',w:'Xiddig',e:'⭐'},{l:'KH',w:'Khiyaar',e:'🥒'},{l:'D',w:'Doon',e:'🛶'},{l:'R',w:'Roob',e:'🌧️'},{l:'S',w:'Sariir',e:'🛏️'},{l:'SH',w:'Shimbir',e:'🐦'},{l:'DH',w:'Dhurwaa',e:'🐺'},{l:'C',w:'Calan',e:'🇸🇴'},{l:'G',w:'Geed',e:'🌳'},{l:'F',w:'Faras',e:'🐎'},{l:'Q',w:'Qorrax',e:'☀️'},{l:'K',w:'Kalluun',e:'🐟'},{l:'L',w:'Libax',e:'🦁'},{l:'M',w:'Mas',e:'🐍'},{l:'N',w:'Nacnac',e:'🍬'},{l:'W',w:'Waraabe',e:'🐺'},{l:'H',w:'Hooyo',e:'👩'},{l:'Y',w:'Yaxaas',e:'🐊'}];
+const vowels=[{l:'A',w:'Aqal',e:'🏠'},{l:'E',w:'Eey',e:'🐕'},{l:'I',w:'Isha',e:'👁️'},{l:'O',w:'Orod',e:'🏃'},{l:'U',w:'Ubax',e:'🌸'}];
+letters.concat(vowels).forEach(d=>d.sentence=`${d.l} waa ${d.w}.`);
+const gridDisplay=document.getElementById('gridDisplay');
+const modal=document.getElementById('modal');
+const mXaraf=document.getElementById('mXaraf');
+const mEmoji=document.getElementById('mEmoji');
+const mSentence=document.getElementById('mSentence');
+const closeModal=document.getElementById('closeModal');
+let currentType='upper';
+function renderGrid(type){gridDisplay.innerHTML='';let data=[];
+if(type==='upper') data=letters;
+else if(type==='lower') data=letters.map(l=>({...l,l:l.l.toLowerCase()}));
+else if(type==='vowelsUpper') data=vowels;
+else if(type==='vowelsLower') data=vowels.map(v=>({...v,l:v.l.toLowerCase()}));
+data.forEach(l=>{const card=document.createElement('div');card.className='card';card.innerHTML=`<div class='xaraf'>${l.l}</div><div class='emoji'>${l.e}</div><div class='eray'>${l.w}</div>`;card.onclick=()=>openModal(l);gridDisplay.appendChild(card);});}
+renderGrid(currentType);
+function openModal(l){mXaraf.textContent=l.l;mEmoji.textContent=l.e;mSentence.textContent=l.sentence;modal.classList.add('show');document.body.style.overflow='hidden';}
+function closeModalFunc(){modal.classList.remove('show');document.body.style.overflow='';}
+closeModal.onclick=closeModalFunc;
+modal.addEventListener('click',e=>{if(e.target===modal)closeModalFunc();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModalFunc();});
+function showSection(id,type){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active'); if(id==='learn'){currentType=type||currentType;renderGrid(currentType);}}
+// Quiz logic
+let quizIndex=0,quizScore=0;
+function getQuizData(){const all=[...letters,...vowels];return shuffle(all.map(l=>({question:`Xarafka ${l.l} wuxuu u taagan yahay?`,answer:l.w,options:shuffle([l.w,shuffle(all.filter(a=>a.w!==l.w)).slice(0,3).map(a=>a.w)])})));}
+let quizQuestions=getQuizData();
+function shuffle(a){return a.sort(()=>Math.random()-0.5);}
+function loadQuiz(){if(quizIndex>=quizQuestions.length){document.getElementById('quizQuestion').textContent='Quiz dhamaaday!';document.getElementById('quizOptions').innerHTML='Score: '+quizScore+'/'+quizQuestions.length;return;}
+const q=quizQuestions[quizIndex];document.getElementById('quizQuestion').textContent=q.question;const optsDiv=document.getElementById('quizOptions');optsDiv.innerHTML='';q.options.forEach(opt=>{const btn=document.createElement('button');btn.textContent=opt;btn.onclick=()=>{if(opt===q.answer)quizScore++;quizIndex++;loadQuiz();};optsDiv.appendChild(btn);});document.getElementById('quizScore').textContent='Score: '+quizScore+'/'+quizQuestions.length;}
+function nextQuestion(){loadQuiz();}
+loadQuiz();
+</script>
+</body>
+</html>
