@@ -123,6 +123,9 @@ function openModal(l){
 
     currentAudio = new Audio(l.audio);
     currentAudio.play().catch(err => console.error(err));
+    currentAudio.onended = () => {
+      closeModalFunc();
+    };
   };
 }
 function closeModalFunc(){
