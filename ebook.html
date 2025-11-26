@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+  <meta charset="UTF-8">
+  <title>Ciidii Waay Soo dhowdahay — Qoys Soomaaliyeed oo ku nool Twin Cities</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: "Noto Sans Somali", Arial, sans-serif; background:#f7f9fc; color:#111; margin:0; }
+    header { background:#e5e7eb; padding:16px; }
+    h1 { margin:0; font-size:1.4rem; }
+    .author { color:#555; }
+    .page { padding:20px; min-height:300px; }
+    .controls { display:flex; justify-content:space-between; padding:12px; background:#f1f5f9; }
+    button { padding:8px 12px; border:1px solid #ccc; border-radius:6px; cursor:pointer; }
+    .progress { height:6px; background:#ddd; margin-top:8px; border-radius:999px; overflow:hidden; }
+    .progress div { height:100%; background:#16a34a; width:0%; transition:width .3s; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ciidii Waa Soo Socotaa</h1>
+    <div class="author">Qoraha: Ali Deer</div>
+  </header>
+
+  <main>
+    <div class="page" id="page"></div>
+    <div class="controls">
+      <button id="prev">← Hore</button>
+      <div>
+        <div id="indicator">Bogga 1 ee 30</div>
+        <div class="progress"><div id="progress"></div></div>
+      </div>
+      <button id="next">Xiga →</button>
+    </div>
+  </main>
+
+  <script>
+    const pages = [
+      {
+        title: "Baraf ayaa da`ay",
+        text: [
+          "Maanta  baraf ayaa ku da`ay jidadka. Aabe wuxuu ku celceliyay 'Alhamdulillah' isagoo gaari weyn wadaya.",
+          "Hooyo waxay diyaarinaysay cashadii, carruurtuna waxay guriga ku soo galeen wajiyo casaanka qabow.",
+          "In kasta oo ay ku dhasheen Minnesota, xididkoodu wuxuu ka soo jeedaa Soomaaliya."
+        ]
+      },
+      {
+        title: "Shaqo iyo Qoys",
+        text: [
+          "Hooyo waxay ka shaqeysaa Amazon, Aabe wuxuu ku jiraa safar gawaarida waa weyn ayuu wadaa.",
+          "qoysku wuu wada shaqeyaa waa ilaahay mahadii .",
+          "Carruurtu waxay sugayaan maalinta Ciida."
+        ]
+      },
+      {
+        title: "Maalmaha Dugsi",
+        text: [
+          "Sabtida iyo Axadda carruurtu waxay aadaan dugsi Qur’aan.",
+          "Ayaan waxay caawisaa kuwa yaryar, Hamza wuxuu baranayaa akhriska, Nura waxay sawiraysaa masjid."
+        ]
+      },
+      {
+        title: "Ciidii Waa Soo Dhawdahay",
+        text: [
+          "Carruurtu waxay ku xisaabinayaan maalmaha kalendarka.",
+          "Hamza wuxuu xusuustaa Mall of America iyo ciyaaraha uu ku raaxaystay.",
+          "Nura waxay ku faraxsan tahay dharka cusub iyo buskudka."
+        ]
+      },
+      {
+        title: "Maalinta Ciida",
+        text: [
+          "Qoyska oo dhan waxay u baxeen salaadda Ciid.",
+          "Waxay is salaameen deriska: 'Ciid Mubaarak!'",
+          "Kadib waxay booqdeen Mall of America si ay ugu dabaal degaan."
+        ]
+      },
+      {
+        title: "Gunaanad",
+        text: [
+          "Fiidkii, Aabe oo soo wacay caruurtii oo cashnaysa, wuxuu yiri: 'Waxaan nahay Soomaali, Muslim, iyo Maraykan.'",
+          "Hooyo waxay ku dartay: 'Waxaan nahay qoys isku duuban.'",
+          "Carruurtu waxay ku riyoonayeen Ciidka soo socda."
+        ]
+      }
+    ];
+
+    let index = 0;
+    const pageEl = document.getElementById('page');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const indicator = document.getElementById('indicator');
+    const progress = document.getElementById('progress');
+
+    function render() {
+      const p = pages[index];
+      pageEl.innerHTML = `<h2>${p.title}</h2>` + p.text.map(t => `<p>${t}</p>`).join('');
+      indicator.textContent = `Bogga ${index+1} ee ${pages.length}`;
+      progress.style.width = ((index+1)/pages.length*100) + "%";
+      prevBtn.disabled = index===0;
+      nextBtn.disabled = index===pages.length-1;
+    }
+
+    prevBtn.onclick = () => { if(index>0){ index--; render(); } };
+    nextBtn.onclick = () => { if(index<pages.length-1){ index++; render(); } };
+    document.addEventListener('keydown', e => {
+      if(e.key==="ArrowLeft") prevBtn.click();
+      if(e.key==="ArrowRight") nextBtn.click();
+    });
+
+    render();
+  </script>
+</body>
+</html>
