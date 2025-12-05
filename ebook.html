@@ -14,6 +14,38 @@
     button { padding:8px 12px; border:1px solid #ccc; border-radius:6px; cursor:pointer; }
     .progress { height:6px; background:#ddd; margin-top:8px; border-radius:999px; overflow:hidden; }
     .progress div { height:100%; background:#16a34a; width:0%; transition:width .3s; }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #f1f5f9;
+    }
+
+    .center-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .page-info {
+      text-align: center;
+    }
+
+    .audio-btn {
+      padding: 8px 14px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+    }
+
+    .audio-btn:hover {
+      background: #e5e7eb;
+    }
   </style>
 </head>
 <body>
@@ -26,9 +58,14 @@
     <div class="page" id="page"></div>
     <div class="controls">
       <button id="prev">← Hore</button>
-      <div>
-        <div id="indicator">Bogga 1 ee 30</div>
-        <div class="progress"><div id="progress"></div></div>
+      <div class="center-controls">
+        <div class="page-info">
+          <div id="indicator">Bogga 1 ee 6</div>
+          <div class="progress">
+            <div id="progress"></div>
+          </div>
+        </div>
+        <button id="audioBtn" class="audio-btn">▶ Akhri</button>
       </div>
       <button id="next">Xiga →</button>
     </div>
@@ -42,7 +79,8 @@
           "Maanta  baraf ayaa ku da`ay jidadka. Aabe wuxuu ku celceliyay 'Alhamdulillah' isagoo gaari weyn wadaya.",
           "Hooyo waxay diyaarinaysay cashadii, carruurtuna waxay guriga ku soo galeen wajiyo casaanka qabow.",
           "In kasta oo ay ku dhasheen Minnesota, xididkoodu wuxuu ka soo jeedaa Soomaaliya."
-        ]
+        ],
+        audio: "audio/page1.m4a"
       },
       {
         title: "Shaqo iyo Qoys",
@@ -50,14 +88,16 @@
           "Hooyo waxay ka shaqeysaa Amazon, Aabe wuxuu ku jiraa safar gawaarida waa weyn ayuu wadaa.",
           "qoysku wuu wada shaqeyaa waa ilaahay mahadii .",
           "Carruurtu waxay sugayaan maalinta Ciida."
-        ]
+        ],
+        audio: "audio/page2.m4a"
       },
       {
         title: "Maalmaha Dugsi",
         text: [
           "Sabtida iyo Axadda carruurtu waxay aadaan dugsi Qur’aan.",
           "Ayaan waxay caawisaa kuwa yaryar, Hamza wuxuu baranayaa akhriska, Nura waxay sawiraysaa masjid."
-        ]
+        ],
+        audio: "audio/page3.m4a"
       },
       {
         title: "Ciidii Waa Soo Dhawdahay",
@@ -65,7 +105,8 @@
           "Carruurtu waxay ku xisaabinayaan maalmaha kalendarka.",
           "Hamza wuxuu xusuustaa Mall of America iyo ciyaaraha uu ku raaxaystay.",
           "Nura waxay ku faraxsan tahay dharka cusub iyo buskudka."
-        ]
+        ],
+        audio: "audio/page4.m4a"
       },
       {
         title: "Maalinta Ciida",
@@ -73,7 +114,8 @@
           "Qoyska oo dhan waxay u baxeen salaadda Ciid.",
           "Waxay is salaameen deriska: 'Ciid Mubaarak!'",
           "Kadib waxay booqdeen Mall of America si ay ugu dabaal degaan."
-        ]
+        ],
+        audio: "audio/page5.m4a"
       },
       {
         title: "Gunaanad",
@@ -81,7 +123,8 @@
           "Fiidkii, Aabe oo soo wacay caruurtii oo cashnaysa, wuxuu yiri: 'Waxaan nahay Soomaali, Muslim, iyo Maraykan.'",
           "Hooyo waxay ku dartay: 'Waxaan nahay qoys isku duuban.'",
           "Carruurtu waxay ku riyoonayeen Ciidka soo socda."
-        ]
+        ],
+        audio: "audio/page6.m4a"
       }
     ];
 
@@ -91,15 +134,53 @@
     const nextBtn = document.getElementById('next');
     const indicator = document.getElementById('indicator');
     const progress = document.getElementById('progress');
+    
+    const audioBtn = document.getElementById('audioBtn');
+    let audio = null;
 
     function render() {
+      // Stop any audio from the previous page
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+
       const p = pages[index];
+
+      // Render text
       pageEl.innerHTML = `<h2>${p.title}</h2>` + p.text.map(t => `<p>${t}</p>`).join('');
       indicator.textContent = `Bogga ${index+1} ee ${pages.length}`;
-      progress.style.width = ((index+1)/pages.length*100) + "%";
-      prevBtn.disabled = index===0;
-      nextBtn.disabled = index===pages.length-1;
+      progress.style.width = ((index+1) / pages.length * 100) + "%";
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === pages.length - 1;
+
+      // Setup audio for this page
+      if (p.audio) {
+        audio = new Audio(p.audio);
+        audioBtn.disabled = false;
+        audioBtn.textContent = "▶ Akhri";
+
+        audio.onended = () => {
+          audioBtn.textContent = "▶ Akhri";
+        };
+      } else {
+        audio = null;
+        audioBtn.disabled = true;
+        audioBtn.textContent = "▶ Akhri";
+      }
     }
+
+    audioBtn.onclick = () => {
+      if (!audio) return;
+
+      if (audio.paused) {
+        audio.play();
+        audioBtn.textContent = "⏸ Hakad";
+      } else {
+        audio.pause();
+        audioBtn.textContent = "▶ Akhri";
+      }
+    };
 
     prevBtn.onclick = () => { if(index>0){ index--; render(); } };
     nextBtn.onclick = () => { if(index<pages.length-1){ index++; render(); } };
